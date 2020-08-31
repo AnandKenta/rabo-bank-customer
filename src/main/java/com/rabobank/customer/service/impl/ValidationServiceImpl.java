@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.rabobank.customer.constants.Constants;
+import com.rabobank.customer.exception.FormatException;
 import com.rabobank.customer.record.ErrorRecord;
 import com.rabobank.customer.record.Record;
 import com.rabobank.customer.record.RecordResponse;
@@ -27,20 +28,46 @@ public class ValidationServiceImpl implements ValidationService {
 		Set<ErrorRecord> duplicateErrorRecordSet = getDuplicateErrorRecords(
 				records.stream().filter(o -> Collections.frequency(records, o) > 1).collect(Collectors.toList()));
 		Set<ErrorRecord> balanceErrorRecordSet = getBalanceErrorRedord(records);
+		String processIndex = "";
+		processIndex += (duplicateErrorRecordSet.isEmpty()) ? "1" : "0";
+		processIndex += (balanceErrorRecordSet.isEmpty()) ? "1" : "0";
+		try {
+			return processCheck(response, duplicateErrorRecordSet, balanceErrorRecordSet, processIndex);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new FormatException();
+		}
+	}
 
-		if (duplicateErrorRecordSet.size() > 0 && balanceErrorRecordSet.size() > 0) {
+	/**
+	 * @param response
+	 * @param duplicateErrorRecordSet
+	 * @param balanceErrorRecordSet
+	 * @param methodIndex
+	 * @return
+	 */
+	private RecordResponse processCheck(RecordResponse response, Set<ErrorRecord> duplicateErrorRecordSet,
+			Set<ErrorRecord> balanceErrorRecordSet, String processIndex) {
+		switch (processIndex) {
+		case "00":
 			log.info(Constants.DUPLICATE_REFERENCE_INCORRECT_END_BALANCE);
 			response.setResult(Constants.DUPLICATE_REFERENCE_INCORRECT_END_BALANCE);
 			response.setErrorRecords(Stream.of(duplicateErrorRecordSet, balanceErrorRecordSet).flatMap(x -> x.stream())
 					.collect(Collectors.toSet()));
-		} else if (duplicateErrorRecordSet.size() > 0) {
+			break;
+		case "01":
 			log.info(Constants.DUPLICATE_REFERENCE);
 			response.setErrorRecords(duplicateErrorRecordSet);
 			response.setResult(Constants.DUPLICATE_REFERENCE);
-		} else if (balanceErrorRecordSet.size() > 0) {
+			break;
+		case "10":
 			log.info(Constants.INCORRECT_END_BALANCE);
 			response.setResult(Constants.INCORRECT_END_BALANCE);
 			response.setErrorRecords(balanceErrorRecordSet);
+			break;
+		default:
+			log.info(Constants.SUCCESS);
+			break;
 		}
 		return response;
 	}

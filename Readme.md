@@ -25,6 +25,12 @@ Do the follwing commends in folder path after clone
 - To Test the configuration open this link http://localhost:8080/v2/api-docs
 - To check the generated documentation rendered by Swagger UI open link http://localhost:8080/swagger-ui.html
 
+## cURL code to check from shell
+```
+curl --location --request POST 'http://localhost:8080/rabo/processor' 
+--header 'Content-Type: application/json' 
+--data-raw '[<YOUR JSON DATA>]'
+```
 ## Implementation Details
 - Used spring boot start web dependency
 - Implemented Integration test using Junit and Mockito
