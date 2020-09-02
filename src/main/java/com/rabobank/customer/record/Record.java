@@ -39,6 +39,7 @@ public class Record {
 	@JsonProperty("End Balance")
 	@NotNull
 	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+	@JsonAlias({"endBalance"})
 	private BigDecimal endBalance;
 
 	public Record() {
