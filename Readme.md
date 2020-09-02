@@ -18,7 +18,7 @@ Implement a REST service which receives the customer statement JSON as a POST da
 
 ## To Run The application
 Do the follwing commends in folder path after clone  
-`mvn clean Package`  
+`mvn clean package`  
 `mvn spring-boot:run`  
 
 ## To Check The Swagger

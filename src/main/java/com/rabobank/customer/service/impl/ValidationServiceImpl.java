@@ -27,7 +27,7 @@ public class ValidationServiceImpl implements ValidationService {
 		RecordResponse response = new RecordResponse(Constants.SUCCESS);
 		Set<ErrorRecord> duplicateErrorRecordSet = getDuplicateErrorRecords(
 				records.stream().filter(o -> Collections.frequency(records, o) > 1).collect(Collectors.toList()));
-		Set<ErrorRecord> balanceErrorRecordSet = getBalanceErrorRedord(records);
+		Set<ErrorRecord> balanceErrorRecordSet = getBalanceErrorRecord(records);
 		String processIndex = "";
 		processIndex += (duplicateErrorRecordSet.isEmpty()) ? "1" : "0";
 		processIndex += (balanceErrorRecordSet.isEmpty()) ? "1" : "0";
@@ -72,7 +72,7 @@ public class ValidationServiceImpl implements ValidationService {
 		return response;
 	}
 
-	private Set<ErrorRecord> getDuplicateErrorRecords(List<Record> errorDublicateList) {
+	private Set<ErrorRecord> getDuplicateErrorRecords(List<Record> errorDublicateList) throws FormatException {
 		Set<ErrorRecord> errorRecordSet = new HashSet<>();
 		errorDublicateList.forEach(record -> {
 			ErrorRecord eRecord = new ErrorRecord();
@@ -83,7 +83,7 @@ public class ValidationServiceImpl implements ValidationService {
 		return errorRecordSet;
 	}
 
-	private Set<ErrorRecord> getBalanceErrorRedord(List<Record> records) {
+	private Set<ErrorRecord> getBalanceErrorRecord(List<Record> records) throws FormatException {
 		Set<ErrorRecord> errorRecordSet = new HashSet<>();
 		records.forEach(record -> {
 			if (!(record.getStartBalance().add(record.getMutation())).stripTrailingZeros()

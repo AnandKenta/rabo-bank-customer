@@ -5,31 +5,40 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Record {
 
 	@JsonProperty("Reference")
 	@NotNull
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 	private int reference;
 
 	@JsonProperty("AccountNumber")
 	@NotNull
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 	private String accountNumber;
 
 	@JsonProperty("Start Balance")
 	@NotNull
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+	@JsonAlias({"startBalance"})
 	private BigDecimal startBalance;
 
 	@JsonProperty("Mutation")
 	@NotNull
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 	private BigDecimal mutation;
 
 	@JsonProperty("Description")
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 	private String description;
 
 	@JsonProperty("End Balance")
 	@NotNull
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 	private BigDecimal endBalance;
 
 	public Record() {
